@@ -1,7 +1,13 @@
 from flask import Flask,request,jsonify
 
-app = Flask(__name__)
 
+from dataclasses import dataclass
+
+@dataclass
+class Result:
+    result: int
+
+app = Flask(__name__)
 
 @app.route("/calculator/greeting", methods=['GET'])
 def greeting():
@@ -14,7 +20,12 @@ def add():
     n1 = data['first']
     n2 = data['second']
     sum = int(n1)+int(n2)
-    return jsonify({"result":sum}),200
+
+    numbers = request.json
+    response = Result(numbers['first'] + numbers['second'])
+    return jsonify(response)
+
+    # return jsonify({"result":sum}),200
 
 
 @app.route("/calculator/subtract", methods=['POST'])
@@ -23,7 +34,11 @@ def subtract():
     n1 = data['first']
     n2 = data['second']
     result = int(n1)-int(n2)
-    return jsonify({"result":result}),200
+
+    numbers = request.json
+    response = Result(numbers['first'] - numbers['second'])
+    return jsonify(response),200
+    #return jsonify({"result":result}),200
 
 
 if __name__ == '__main__':
